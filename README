@@ -1,1 +1,51 @@
 
+import streamlit as st
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Exemple de données fictives
+data = {
+    'x': np.arange(10),
+    'y': np.random.randint(0, 10, 10),
+    'category': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+}
+df = pd.DataFrame(data)
+
+# Tracé avec st.line_chart()
+st.line_chart(df['y'])
+
+# Tracé avec st.area_chart()
+st.area_chart(df['y'])
+
+# Tracé avec st.bar_chart()
+st.bar_chart(df['y'])
+
+# Tracé avec st.pyplot()
+fig, ax = plt.subplots()
+ax.plot(df['x'], df['y'])
+st.pyplot(fig)
+
+# Tracé avec st.plotly_chart()
+import plotly.express as px
+fig = px.line(df, x='x', y='y')
+st.plotly_chart(fig)
+
+# Tracé avec st.vega_lite_chart()
+import altair as alt
+chart = alt.Chart(df).mark_line().encode(x='x', y='y')
+spec = {
+    'mark': 'line',
+    'encoding': {
+        'x': {'field': 'x', 'type': 'quantitative'},
+        'y': {'field': 'y', 'type': 'quantitative'}
+    }
+}
+st.vega_lite_chart(df, spec, use_container_width=True)
+
+# Tracé avec st.pydeck_chart()
+import pydeck as pdk
+layer = pdk.Layer('LineLayer', data=df, get_position='[x, y]')
+view_state = pdk.ViewState(width=400, height=300)
+r = pdk.Deck(layers=[layer], initial_view_state=view_state)
+st.pydeck_chart(r)
